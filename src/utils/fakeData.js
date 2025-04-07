@@ -14,8 +14,8 @@ export function generateFakeDepartment(id) {
   };
 }
 
-// Generate multiple departments
-export function generateFakeDepartments(count = 5) {
+// 🔥 Now generates 8 departments by default
+export function generateFakeDepartments(count = 8) {
   return Array.from({ length: count }, (_, i) => generateFakeDepartment(i + 1));
 }
 
