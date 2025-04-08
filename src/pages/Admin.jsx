@@ -11,11 +11,9 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-
 export default function AdminPanel() {
   const [departments, setDepartments] = useState([]);
   const [professors, setProfessors] = useState([]);
-
   // Add a new department
   const addDepartment = (name, description, bannerImage) => {
     const newDepartment = {
@@ -27,12 +25,10 @@ export default function AdminPanel() {
     };
     setDepartments([...departments, newDepartment]);
   };
-
   // Remove department
   const removeDepartment = (id) => {
     setDepartments(departments.filter((dept) => dept.id !== id));
   };
-
   // Add professor
   const addProfessor = (name, email, bio, profileImage, departmentId) => {
     const newProfessor = {
@@ -45,18 +41,15 @@ export default function AdminPanel() {
     };
     setProfessors([...professors, newProfessor]);
   };
-
   // Remove professor
   const removeProfessor = (id) => {
     setProfessors(professors.filter((prof) => prof.id !== id));
   };
-
   return (
     <Container sx={{ py: 5 }}>
       <Typography variant="h4" gutterBottom>
         Admin Panel
       </Typography>
-
       {/* === Departments Section === */}
       <Box sx={{ mt: 5 }}>
         <Typography variant="h5">Departments</Typography>
@@ -77,7 +70,6 @@ export default function AdminPanel() {
             Add Department
           </Button>
         </Box>
-
         <Grid container spacing={2} sx={{ mt: 2 }}>
           {departments.map((dept) => (
             <Grid item key={dept.id} xs={12} md={6} lg={4}>
@@ -109,7 +101,6 @@ export default function AdminPanel() {
           ))}
         </Grid>
       </Box>
-
       {/* === Professors Section === */}
       <Box sx={{ mt: 5 }}>
         <Typography variant="h5">Professors</Typography>
@@ -134,7 +125,6 @@ export default function AdminPanel() {
             Add Professor
           </Button>
         </Box>
-
         <Grid container spacing={2} sx={{ mt: 2 }}>
           {professors.map((prof) => (
             <Grid item key={prof.id} xs={12} md={6} lg={4}>
