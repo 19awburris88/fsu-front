@@ -9,9 +9,11 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function AuthModal({ open, onClose }) {
   const [tab, setTab] = useState(0);
+  const navigate = useNavigate();
 
   const handleTabChange = (event, newValue) => setTab(newValue);
 
@@ -30,9 +32,16 @@ export default function AuthModal({ open, onClose }) {
         {tab === 0 ? (
           // Login Form
           <Box display="flex" flexDirection="column" gap={2}>
-            <TextField label="Email" fullWidth />
+            <TextField label="Email" type="email" fullWidth />
             <TextField label="Password" type="password" fullWidth />
-            <Button variant="contained" fullWidth>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => {
+                navigate("/admin");
+                onClose();
+              }}
+            >
               Log In
             </Button>
           </Box>
@@ -40,10 +49,16 @@ export default function AuthModal({ open, onClose }) {
           // Register Form
           <Box display="flex" flexDirection="column" gap={2}>
             <TextField label="Full Name" fullWidth />
-            <TextField label="Email" fullWidth />
+            <TextField label="Email" type="email" fullWidth />
             <TextField label="Password" type="password" fullWidth />
-            <TextField label="Confirm Password" type="password" fullWidth />
-            <Button variant="contained" fullWidth>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => {
+                navigate("/admin");
+                onClose();
+              }}
+            >
               Register
             </Button>
           </Box>
