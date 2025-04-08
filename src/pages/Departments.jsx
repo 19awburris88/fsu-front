@@ -1,90 +1,118 @@
 import React from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography, Container } from '@mui/material';
+import { Grid, Card, CardContent, CardMedia, Typography, Container, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
-// Sample data for 8 departments
+// Array of department objects
 const departments = [
   {
     id: 1,
     name: 'Computer Science',
     description: 'Exploring the world of algorithms and data structures.',
-    image: '/assets/computer-science.jpg',
+    image: 'src/assets/computer-science.jpg',
     contact: 'cs@university.edu',
   },
   {
     id: 2,
     name: 'Business Administration',
     description: 'Understanding the dynamics of business and management.',
-    image: '/assets/business-administration.jpg',
+    image: 'src/assets/business-administration.webp',
     contact: 'ba@university.edu',
   },
   {
     id: 3,
     name: 'Mechanical Engineering',
     description: 'Designing and analyzing mechanical systems.',
-    image: '/assets/mechanical-engineering.jpg',
+    image: 'src/assets/mechanical-engineering.jpg',
     contact: 'me@university.edu',
   },
   {
     id: 4,
     name: 'Psychology',
     description: 'Studying the human mind and behavior.',
-    image: '/assets/psychology.jpg',
+    image: 'src/assets/psychology.webp',
     contact: 'psych@university.edu',
   },
   {
     id: 5,
     name: 'Biology',
     description: 'Exploring living organisms and life processes.',
-    image: '/assets/biology.jpg',
+    image: 'src/assets/biology.jpg',
     contact: 'bio@university.edu',
   },
   {
     id: 6,
     name: 'Art and Design',
     description: 'Fostering creativity and visual communication.',
-    image: '/assets/art-and-design.jpg',
+    image: 'src/assets/art-and-design.jpg',
     contact: 'art@university.edu',
   },
   {
     id: 7,
     name: 'Environmental Science',
     description: 'Understanding and protecting our environment.',
-    image: '/assets/environmental-science.jpg',
+    image: 'src/assets/environmental-science.jpg',
     contact: 'envsci@university.edu',
   },
   {
     id: 8,
     name: 'Mathematics',
     description: 'Delving into the world of numbers and theories.',
-    image: '/assets/mathematics.jpg',
+    image: 'src/assets/mathematics.jpeg',
     contact: 'math@university.edu',
   },
 ];
 
 export default function Departments() {
   return (
-    <Container>
-      <Grid container spacing={4}>
+    <Container sx={{ py: 5 }}>
+      <Typography variant="h4" align="center" gutterBottom fontWeight={700}>
+        Academic Departments
+      </Typography>
+      <Grid container spacing={4} justifyContent="center">
         {departments.map((dept) => (
           <Grid item xs={12} sm={6} key={dept.id}>
-            <Card>
+            <Card
+              sx={{
+                height: 400,
+                width: 250,
+                display: 'flex',
+                flexDirection: 'column',
+                borderRadius: 3,
+                boxShadow: 4,
+              }}
+            >
               <CardMedia
                 component="img"
-                height="140"
                 image={dept.image}
                 alt={dept.name}
+                sx={{
+                  height: 165,
+                  width: '100%',
+                  objectFit: 'cover',
+                }}
+                onError={(e) => {
+                  e.target.src = 'https://via.placeholder.com/400x180?text=Image+Unavailable';
+                }}
               />
-              <CardContent>
-                <Typography variant="h5" component="div">
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" fontWeight={600}>
                   {dept.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                   {dept.description}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Contact: {dept.contact}
+                <Typography variant="body2" fontWeight={500} sx={{ mt: 1 }}>
+                  📧 {dept.contact}
                 </Typography>
               </CardContent>
+              <Button
+                component={Link}
+                to={`/faculty?department=${dept.id}`}
+                variant="contained"
+                sx={{ m: 2 }}
+              >
+                View Faculty
+              </Button>
             </Card>
           </Grid>
         ))}

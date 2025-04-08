@@ -1,21 +1,45 @@
-import React from "react";
-import { AppBar, Toolbar, Button, Typography } from "@mui/material";
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Typography,
+  IconButton,
+  Box,
+} from "@mui/material";
 import { Link } from "react-router-dom";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AuthModal from "./AuthModal"; // new component
 
 export default function Navbar() {
+  const [authOpen, setAuthOpen] = useState(false);
+
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Fullstack University
-        </Typography>
-        <Button color="inherit" component={Link} to="/departments">
-          Departments
-        </Button>
-        <Button color="inherit" component={Link} to="/faculty">
-          Faculty
-        </Button>
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Fullstack University
+          </Typography>
+
+          <Button color="inherit" component={Link} to="/departments">
+            Departments
+          </Button>
+
+          <Button color="inherit" component={Link} to="/faculty">
+            Faculty
+          </Button>
+
+          <Box sx={{ ml: 2 }}>
+            <IconButton color="inherit" onClick={() => setAuthOpen(true)}>
+              <AccountCircleIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      {/* Modal */}
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+    </>
   );
 }

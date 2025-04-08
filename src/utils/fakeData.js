@@ -1,26 +1,7 @@
 import { faker } from '@faker-js/faker';
 
-// Generate one department with faculty
-export function generateFakeDepartment(id) {
-  const departmentName = faker.commerce.department();
-
-  return {
-    id,
-    name: departmentName,
-    description: faker.company.catchPhrase(),
-    image: `https://source.unsplash.com/600x300/?${departmentName}`,
-    contact: faker.internet.email(),
-    professors: generateFakeProfessors(3, id),
-  };
-}
-
-// 🔥 Now generates 8 departments by default
-export function generateFakeDepartments(count = 8) {
-  return Array.from({ length: count }, (_, i) => generateFakeDepartment(i + 1));
-}
-
 // Generate a professor
-export function generateFakeProfessor(id, departmentId = null) {
+function generateFakeProfessor(id, departmentId) {
   return {
     id,
     name: faker.person.fullName(),
@@ -31,9 +12,27 @@ export function generateFakeProfessor(id, departmentId = null) {
   };
 }
 
-// Generate multiple professors
-export function generateFakeProfessors(count = 10, departmentId = null) {
+// Generate multiple professors for a department
+function generateFakeProfessors(count, departmentId) {
   return Array.from({ length: count }, (_, i) =>
     generateFakeProfessor(i + 1, departmentId)
   );
+}
+
+// Generate a department with professors
+function generateFakeDepartment(id) {
+  const departmentName = faker.commerce.department();
+  return {
+    id,
+    name: departmentName,
+    description: faker.company.catchPhrase(),
+    image: `https://source.unsplash.com/600x300/?${departmentName}`,
+    contact: faker.internet.email(),
+    professors: generateFakeProfessors(3, id),
+  };
+}
+
+// Generate multiple departments
+export function generateFakeDepartments(count = 8) {
+  return Array.from({ length: count }, (_, i) => generateFakeDepartment(i + 1));
 }

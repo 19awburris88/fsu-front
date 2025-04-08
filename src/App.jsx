@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Departments from "./pages/Departments";
 import Faculty from "./pages/Faculty";
+import AdminPanel from "./pages/Admin"; // adjust path as needed
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/" element={<Navigate to="/departments" />} />
           <Route path="/departments" element={<Departments />} />
           <Route path="/faculty" element={<Faculty />} />
+          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
       </Container>
 
