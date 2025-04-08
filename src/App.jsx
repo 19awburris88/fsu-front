@@ -4,7 +4,7 @@ import Footer from "./components/Footer";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Departments from "./pages/Departments";
 import Faculty from "./pages/Faculty";
-import AdminPanel from "./pages/Admin"; // adjust path as needed
+import AdminPanel from "./pages/Admin"; 
 
 function App() {
   return (

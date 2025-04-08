@@ -58,7 +58,7 @@ export default function AdminPanel() {
           <TextField label="Description" fullWidth />
           <TextField label="Banner Image URL" fullWidth />
           <Button
-            variant="contained"
+             variant="contained"
             onClick={() =>
               addDepartment(
                 "Test Dept",
@@ -66,6 +66,10 @@ export default function AdminPanel() {
                 "https://via.placeholder.com/400x200"
               )
             }
+            sx={{
+              padding: "0px 26px",  
+              fontSize: "12px",      
+            }}
           >
             Add Department
           </Button>
