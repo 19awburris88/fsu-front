@@ -11,24 +11,34 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+
 export default function AdminPanel() {
   const [departments, setDepartments] = useState([]);
+  const [departmentName, setDepartmentName] = useState("");
+  const [departmentDescription, setDepartmentDescription] = useState("");
+  const [departmentBannerImage, setDepartmentBannerImage] = useState("");
   const [professors, setProfessors] = useState([]);
+
   // Add a new department
-  const addDepartment = (name, description, bannerImage) => {
+  const addDepartment = () => {
     const newDepartment = {
       id: Date.now(),
-      name,
-      description,
-      bannerImage,
+      name: departmentName,
+      description: departmentDescription,
+      bannerImage: departmentBannerImage,
       professors: [],
     };
     setDepartments([...departments, newDepartment]);
+    setDepartmentName(""); // Clear inputs
+    setDepartmentDescription("");
+    setDepartmentBannerImage("");
   };
+
   // Remove department
   const removeDepartment = (id) => {
     setDepartments(departments.filter((dept) => dept.id !== id));
   };
+
   // Add professor
   const addProfessor = (name, email, bio, profileImage, departmentId) => {
     const newProfessor = {
@@ -41,10 +51,12 @@ export default function AdminPanel() {
     };
     setProfessors([...professors, newProfessor]);
   };
+
   // Remove professor
   const removeProfessor = (id) => {
     setProfessors(professors.filter((prof) => prof.id !== id));
   };
+
   return (
     <Container sx={{ py: 5 }}>
       <Typography variant="h4" gutterBottom>
@@ -54,21 +66,30 @@ export default function AdminPanel() {
       <Box sx={{ mt: 5 }}>
         <Typography variant="h5">Departments</Typography>
         <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
-          <TextField label="Name" fullWidth />
-          <TextField label="Description" fullWidth />
-          <TextField label="Banner Image URL" fullWidth />
+          <TextField
+            label="Name"
+            fullWidth
+            value={departmentName}
+            onChange={(e) => setDepartmentName(e.target.value)}
+          />
+          <TextField
+            label="Description"
+            fullWidth
+            value={departmentDescription}
+            onChange={(e) => setDepartmentDescription(e.target.value)}
+          />
+          <TextField
+            label="Banner Image URL"
+            fullWidth
+            value={departmentBannerImage}
+            onChange={(e) => setDepartmentBannerImage(e.target.value)}
+          />
           <Button
-             variant="contained"
-            onClick={() =>
-              addDepartment(
-                "Test Dept",
-                "Description",
-                "https://via.placeholder.com/400x200"
-              )
-            }
+            variant="contained"
+            onClick={addDepartment}
             sx={{
-              padding: "0px 26px",  
-              fontSize: "12px",      
+              padding: "0px 26px",
+              fontSize: "12px",
             }}
           >
             Add Department
@@ -91,9 +112,17 @@ export default function AdminPanel() {
                   }}
                 />
                 <Box
-                  sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 1 }}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: 1,
+                    mt: 1,
+                  }}
                 >
-                  <IconButton size="small" onClick={() => removeDepartment(dept.id)}>
+                  <IconButton
+                    size="small"
+                    onClick={() => removeDepartment(dept.id)}
+                  >
                     <DeleteIcon />
                   </IconButton>
                   <IconButton size="small">
@@ -149,7 +178,10 @@ export default function AdminPanel() {
                 <Box
                   sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 1 }}
                 >
-                  <IconButton size="small" onClick={() => removeProfessor(prof.id)}>
+                  <IconButton
+                    size="small"
+                    onClick={() => removeProfessor(prof.id)}
+                  >
                     <DeleteIcon />
                   </IconButton>
                   <IconButton size="small">
