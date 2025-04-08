@@ -13,7 +13,13 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@faker-js/faker": "^9.6.0",
+<<<<<<< HEAD
     "@mui/icons-material": "^7.0.1",
+=======
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+>>>>>>> 6453a63b84bafbb360eb3bb18cef88eafc83737a
     "@mui/material": "^7.0.1",
     "axios": "^1.8.4",
     "react": "^19.0.0",
