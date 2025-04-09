@@ -8,6 +8,7 @@ import {
   TextField,
   Paper,
   IconButton,
+  Alert,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,9 +19,21 @@ export default function AdminPanel() {
   const [departmentDescription, setDepartmentDescription] = useState("");
   const [departmentBannerImage, setDepartmentBannerImage] = useState("");
   const [professors, setProfessors] = useState([]);
+  const [professorName, setProfessorName] = useState("");
+  const [professorEmail, setProfessorEmail] = useState("");
+  const [professorBio, setProfessorBio] = useState("");
+  const [professorProfileImage, setProfessorProfileImage] = useState("");
+  const [professorDepartmentId, setProfessorDepartmentId] = useState("");
+  const [error, setError] = useState(""); 
+  const [professorError, setProfessorError] = useState(""); 
 
   // Add a new department
   const addDepartment = () => {
+    if (!departmentName || !departmentDescription || !departmentBannerImage) {
+      setError("All department fields are required!");
+      return;
+    }
+
     const newDepartment = {
       id: Date.now(),
       name: departmentName,
@@ -29,27 +42,45 @@ export default function AdminPanel() {
       professors: [],
     };
     setDepartments([...departments, newDepartment]);
-    setDepartmentName(""); // Clear inputs
+    setDepartmentName(""); 
     setDepartmentDescription("");
     setDepartmentBannerImage("");
+    setError("");
+  };
+
+  // Add a new professor
+  const addProfessor = () => {
+    if (
+      !professorName ||
+      !professorEmail ||
+      !professorBio ||
+      !professorProfileImage ||
+      !professorDepartmentId
+    ) {
+      setProfessorError("All professor fields are required!");
+      return;
+    }
+
+    const newProfessor = {
+      id: Date.now(),
+      name: professorName,
+      email: professorEmail,
+      bio: professorBio,
+      profileImage: professorProfileImage,
+      departmentId: professorDepartmentId,
+    };
+    setProfessors([...professors, newProfessor]);
+    setProfessorName(""); 
+    setProfessorEmail("");
+    setProfessorBio("");
+    setProfessorProfileImage("");
+    setProfessorDepartmentId("");
+    setProfessorError(""); 
   };
 
   // Remove department
   const removeDepartment = (id) => {
     setDepartments(departments.filter((dept) => dept.id !== id));
-  };
-
-  // Add professor
-  const addProfessor = (name, email, bio, profileImage, departmentId) => {
-    const newProfessor = {
-      id: Date.now(),
-      name,
-      email,
-      bio,
-      profileImage,
-      departmentId,
-    };
-    setProfessors([...professors, newProfessor]);
   };
 
   // Remove professor
@@ -65,7 +96,8 @@ export default function AdminPanel() {
       {/* === Departments Section === */}
       <Box sx={{ mt: 5 }}>
         <Typography variant="h5">Departments</Typography>
-        <Box sx={{ mt: 2, display: "flex", gap: 2 }}>
+        <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "row" }}>
+          {error && <Alert severity="error">{error}</Alert>} {/* Display error */}
           <TextField
             label="Name"
             fullWidth
@@ -88,7 +120,7 @@ export default function AdminPanel() {
             variant="contained"
             onClick={addDepartment}
             sx={{
-              padding: "0px 26px",
+              padding: "0px 30px",
               fontSize: "12px",
             }}
           >
@@ -138,22 +170,46 @@ export default function AdminPanel() {
       <Box sx={{ mt: 5 }}>
         <Typography variant="h5">Professors</Typography>
         <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-          <TextField label="Name" />
-          <TextField label="Email" />
-          <TextField label="Bio" />
-          <TextField label="Profile Image URL" />
-          <TextField label="Department ID" />
+          {professorError && (
+            <Alert severity="error">{professorError}</Alert>
+          )} {/* Display professor error */}
+          <TextField
+            label="Name"
+            fullWidth
+            value={professorName}
+            onChange={(e) => setProfessorName(e.target.value)}
+          />
+          <TextField
+            label="Email"
+            fullWidth
+            value={professorEmail}
+            onChange={(e) => setProfessorEmail(e.target.value)}
+          />
+          <TextField
+            label="Bio"
+            fullWidth
+            value={professorBio}
+            onChange={(e) => setProfessorBio(e.target.value)}
+          />
+          <TextField
+            label="Profile Image URL"
+            fullWidth
+            value={professorProfileImage}
+            onChange={(e) => setProfessorProfileImage(e.target.value)}
+          />
+          <TextField
+            label="Department ID"
+            fullWidth
+            value={professorDepartmentId}
+            onChange={(e) => setProfessorDepartmentId(e.target.value)}
+          />
           <Button
             variant="contained"
-            onClick={() =>
-              addProfessor(
-                "Prof Test",
-                "test@university.edu",
-                "Great bio",
-                "https://via.placeholder.com/100",
-                departments[0]?.id || 1
-              )
-            }
+            onClick={addProfessor}
+            sx={{
+              padding: "10px 26px",
+              fontSize: "12px",
+            }}
           >
             Add Professor
           </Button>
