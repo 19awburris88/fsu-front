@@ -22,7 +22,7 @@ function App() {
           <Route path="/" element={<Navigate to="/departments" />} />
           <Route path="/departments" element={<Departments />} />
           <Route path="/faculty" element={<Faculty />} />
-          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin" element={isLoggedIn ? <AdminPanel /> : <Navigate to="/" />} />
         </Routes>
       </Container>
 
