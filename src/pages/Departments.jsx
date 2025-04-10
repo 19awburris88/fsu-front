@@ -15,7 +15,7 @@ const departments = [
     id: 2,
     name: 'Business Administration',
     description: 'Understanding the dynamics of business and management.',
-    image: 'src/assets/business-administration.webp',
+    image: 'src/assets/business-administration.jpg',
     contact: 'ba@university.edu',
   },
   {
