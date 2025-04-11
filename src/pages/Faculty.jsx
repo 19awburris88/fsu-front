@@ -10,7 +10,7 @@ import {
   DialogContentText,
   CardActionArea,
   Avatar,
-  Box
+  Box,
 } from '@mui/material';
 import { generateFakeDepartments } from '../utils/fakeData';
 
@@ -49,6 +49,12 @@ export default function Faculty() {
                 height: 400,
                 borderRadius: 3,
                 boxShadow: 4,
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-10px) scale(1.05)', // Lift and scale effect
+                  boxShadow: 8, 
+                  cursor: 'pointer',
+                },
               }}
             >
               <CardActionArea onClick={() => handleOpen(prof)} sx={{ height: '100%' }}>
@@ -57,7 +63,14 @@ export default function Faculty() {
                     <Avatar
                       src={prof.image}
                       alt={prof.name}
-                      sx={{ width: 100, height: 100 }}
+                      sx={{
+                        width: 100,
+                        height: 100,
+                        transition: 'transform 0.3s ease',
+                        '&:hover': {
+                          transform: 'scale(1.1)', // Slight scale effect for avatar
+                        },
+                      }}
                     />
                     <Typography variant="h6" fontWeight={600} align="center">
                       {prof.name}
@@ -83,7 +96,15 @@ export default function Faculty() {
                 <Avatar
                   src={selectedProfessor.image}
                   alt={selectedProfessor.name}
-                  sx={{ width: 120, height: 120 }}
+                  sx={{
+                    width: 120,
+                    height: 120,
+                    // border: '2px solid #1976d2', 
+                    // transition: 'transform 0.3s ease',
+                    // '&:hover': {
+                    //   transform: 'scale(1.15)', // Slight scale effect for avatar
+                    // },
+                  }}
                 />
                 <Typography variant="subtitle1" fontWeight={500}>
                   Department: {selectedProfessor.departmentName}

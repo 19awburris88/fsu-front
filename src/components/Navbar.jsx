@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -7,12 +7,26 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import AuthModal from "./AuthModal"; // new component
+import AuthModal from "./AuthModal"; // Make sure this path is correct
 
 export default function Navbar() {
   const [authOpen, setAuthOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check login status on load
+    const adminStatus = localStorage.getItem("adminLoggedIn");
+    setIsLoggedIn(adminStatus === "true");
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminLoggedIn");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
 
   return (
     <>
@@ -31,14 +45,19 @@ export default function Navbar() {
           </Button>
 
           <Box sx={{ ml: 2 }}>
-            <IconButton color="inherit" onClick={() => setAuthOpen(true)}>
-              <AccountCircleIcon />
-            </IconButton>
+            {isLoggedIn ? (
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+            ) : (
+              <IconButton color="inherit" onClick={() => setAuthOpen(true)}>
+                <AccountCircleIcon />
+              </IconButton>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
 
-      {/* Modal */}
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );

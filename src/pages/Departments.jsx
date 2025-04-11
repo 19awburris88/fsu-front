@@ -15,7 +15,7 @@ const departments = [
     id: 2,
     name: 'Business Administration',
     description: 'Understanding the dynamics of business and management.',
-    image: 'src/assets/business-administration.webp',
+    image: 'src/assets/business-administration.jpg',
     contact: 'ba@university.edu',
   },
   {
@@ -70,7 +70,7 @@ export default function Departments() {
       </Typography>
       <Grid container spacing={4} justifyContent="center">
         {departments.map((dept) => (
-          <Grid item xs={12} sm={6} key={dept.id}>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={dept.id}>
             <Card
               sx={{
                 height: 400,
@@ -79,6 +79,12 @@ export default function Departments() {
                 flexDirection: 'column',
                 borderRadius: 3,
                 boxShadow: 4,
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-10px) scale(1.05)', // Lifts and slightly scales the card
+                  boxShadow: 8,
+                  cursor: 'pointer',
+                },
               }}
             >
               <CardMedia
@@ -89,6 +95,10 @@ export default function Departments() {
                   height: 165,
                   width: '100%',
                   objectFit: 'cover',
+                  transition: 'opacity 0.3s ease',
+                  '&:hover': {
+                    opacity: 0.9, // Adds slight transparency on hover
+                  },
                 }}
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/400x180?text=Image+Unavailable';
