@@ -1,68 +1,32 @@
-import React from 'react';
-import { Grid, Card, CardContent, CardMedia, Typography, Container, Button } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Container,
+  Button,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
-
-// Array of department objects
-const departments = [
-  {
-    id: 1,
-    name: 'Computer Science',
-    description: 'Exploring the world of algorithms and data structures.',
-    image: 'src/assets/computer-science.jpg',
-    contact: 'cs@university.edu',
-  },
-  {
-    id: 2,
-    name: 'Business Administration',
-    description: 'Understanding the dynamics of business and management.',
-    image: 'src/assets/business-administration.jpg',
-    contact: 'ba@university.edu',
-  },
-  {
-    id: 3,
-    name: 'Mechanical Engineering',
-    description: 'Designing and analyzing mechanical systems.',
-    image: 'src/assets/mechanical-engineering.jpg',
-    contact: 'me@university.edu',
-  },
-  {
-    id: 4,
-    name: 'Psychology',
-    description: 'Studying the human mind and behavior.',
-    image: 'src/assets/psychology.webp',
-    contact: 'psych@university.edu',
-  },
-  {
-    id: 5,
-    name: 'Biology',
-    description: 'Exploring living organisms and life processes.',
-    image: 'src/assets/biology.jpg',
-    contact: 'bio@university.edu',
-  },
-  {
-    id: 6,
-    name: 'Art and Design',
-    description: 'Fostering creativity and visual communication.',
-    image: 'src/assets/art-and-design.jpg',
-    contact: 'art@university.edu',
-  },
-  {
-    id: 7,
-    name: 'Environmental Science',
-    description: 'Understanding and protecting our environment.',
-    image: 'src/assets/environmental-science.jpg',
-    contact: 'envsci@university.edu',
-  },
-  {
-    id: 8,
-    name: 'Mathematics',
-    description: 'Delving into the world of numbers and theories.',
-    image: 'src/assets/mathematics.jpeg',
-    contact: 'math@university.edu',
-  },
-];
+import API from '../api/axios'; // Axios instance with auth headers
 
 export default function Departments() {
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const res = await API.get('/departments');
+        setDepartments(res.data);
+      } catch (err) {
+        console.error('Failed to fetch departments:', err);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
+
   return (
     <Container sx={{ py: 5 }}>
       <Typography variant="h4" align="center" gutterBottom fontWeight={700}>
@@ -81,7 +45,7 @@ export default function Departments() {
                 boxShadow: 4,
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                 '&:hover': {
-                  transform: 'translateY(-10px) scale(1.05)', // Lifts and slightly scales the card
+                  transform: 'translateY(-10px) scale(1.05)',
                   boxShadow: 8,
                   cursor: 'pointer',
                 },
@@ -89,7 +53,7 @@ export default function Departments() {
             >
               <CardMedia
                 component="img"
-                image={dept.image}
+                image={dept.bannerImage}
                 alt={dept.name}
                 sx={{
                   height: 165,
@@ -97,7 +61,7 @@ export default function Departments() {
                   objectFit: 'cover',
                   transition: 'opacity 0.3s ease',
                   '&:hover': {
-                    opacity: 0.9, // Adds slight transparency on hover
+                    opacity: 0.9,
                   },
                 }}
                 onError={(e) => {
@@ -112,7 +76,7 @@ export default function Departments() {
                   {dept.description}
                 </Typography>
                 <Typography variant="body2" fontWeight={500} sx={{ mt: 1 }}>
-                  📧 {dept.contact}
+                  📧 {dept.contactInfo}
                 </Typography>
               </CardContent>
               <Button

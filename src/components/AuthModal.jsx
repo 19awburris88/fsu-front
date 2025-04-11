@@ -10,13 +10,13 @@ import {
   Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import API from "../api/axios"; // ✅ Use axios instance with interceptor
 
 export default function AuthModal({ open, onClose }) {
   const [tab, setTab] = useState(0);
-  const [loginEmail, setLoginEmail] = useState("");
+  const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [regName, setRegName] = useState("");
-  const [regEmail, setRegEmail] = useState("");
+  const [regUsername, setRegUsername] = useState("");
   const [regPassword, setRegPassword] = useState("");
   const [regConfirmPassword, setRegConfirmPassword] = useState("");
 
@@ -24,24 +24,45 @@ export default function AuthModal({ open, onClose }) {
 
   const handleTabChange = (event, newValue) => setTab(newValue);
 
-  const handleLogin = () => {
-    if (loginEmail && loginPassword) {
+  const handleLogin = async () => {
+    try {
+      const res = await API.post("/auth/login", {
+        username: loginUsername,
+        password: loginPassword,
+      });
+
       localStorage.setItem("adminLoggedIn", "true");
+      localStorage.setItem("token", res.data.token);
       navigate("/admin");
       onClose();
+    } catch (err) {
+      console.error("Login failed:", err.response?.data?.error || err.message);
     }
   };
 
-  const handleRegister = () => {
-    if (
-      regName &&
-      regEmail &&
-      regPassword &&
-      regPassword === regConfirmPassword
-    ) {
+  const handleRegister = async () => {
+    if (!regUsername || !regPassword || regPassword !== regConfirmPassword) {
+      return;
+    }
+
+    try {
+      await API.post("/auth/register", {
+        username: regUsername,
+        password: regPassword,
+      });
+
+      // auto-login after register
+      const res = await API.post("/auth/login", {
+        username: regUsername,
+        password: regPassword,
+      });
+
       localStorage.setItem("adminLoggedIn", "true");
+      localStorage.setItem("token", res.data.token);
       navigate("/admin");
       onClose();
+    } catch (err) {
+      console.error("Registration failed:", err.response?.data?.error || err.message);
     }
   };
 
@@ -91,11 +112,10 @@ export default function AuthModal({ open, onClose }) {
         {tab === 0 ? (
           <Box display="flex" flexDirection="column" gap={2} mt={2}>
             <TextField
-              label="Email"
-              type="email"
+              label="Username"
               fullWidth
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
+              value={loginUsername}
+              onChange={(e) => setLoginUsername(e.target.value)}
               sx={fieldStyles.field}
             />
             <TextField
@@ -118,18 +138,10 @@ export default function AuthModal({ open, onClose }) {
         ) : (
           <Box display="flex" flexDirection="column" gap={2} mt={2}>
             <TextField
-              label="Full Name"
+              label="Username"
               fullWidth
-              value={regName}
-              onChange={(e) => setRegName(e.target.value)}
-              sx={fieldStyles.field}
-            />
-            <TextField
-              label="Email"
-              type="email"
-              fullWidth
-              value={regEmail}
-              onChange={(e) => setRegEmail(e.target.value)}
+              value={regUsername}
+              onChange={(e) => setRegUsername(e.target.value)}
               sx={fieldStyles.field}
             />
             <TextField
@@ -138,6 +150,14 @@ export default function AuthModal({ open, onClose }) {
               fullWidth
               value={regPassword}
               onChange={(e) => setRegPassword(e.target.value)}
+              sx={fieldStyles.field}
+            />
+            <TextField
+              label="Confirm Password"
+              type="password"
+              fullWidth
+              value={regConfirmPassword}
+              onChange={(e) => setRegConfirmPassword(e.target.value)}
               sx={fieldStyles.field}
             />
             <Button
