@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -12,44 +12,84 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import API from "../api/axios";
 
 export default function AdminPanel() {
   const [departments, setDepartments] = useState([]);
+  const [professors, setProfessors] = useState([]);
+
+  // Department form
   const [departmentName, setDepartmentName] = useState("");
   const [departmentDescription, setDepartmentDescription] = useState("");
   const [departmentBannerImage, setDepartmentBannerImage] = useState("");
-  const [professors, setProfessors] = useState([]);
+  const [error, setError] = useState("");
+
+  // Professor form
   const [professorName, setProfessorName] = useState("");
   const [professorEmail, setProfessorEmail] = useState("");
   const [professorBio, setProfessorBio] = useState("");
   const [professorProfileImage, setProfessorProfileImage] = useState("");
   const [professorDepartmentId, setProfessorDepartmentId] = useState("");
-  const [error, setError] = useState(""); 
-  const [professorError, setProfessorError] = useState(""); 
+  const [professorError, setProfessorError] = useState("");
 
-  // Add a new department
-  const addDepartment = () => {
+  // Fetch all departments on load
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const res = await API.get("/departments");
+        setDepartments(res.data);
+      } catch (err) {
+        console.error("Failed to fetch departments", err);
+      }
+    };
+    fetchDepartments();
+  }, []);
+
+  // Fetch all professors on load
+  useEffect(() => {
+    const fetchProfessors = async () => {
+      try {
+        const res = await API.get("/professors");
+        setProfessors(res.data);
+      } catch (err) {
+        console.error("Failed to fetch professors", err);
+      }
+    };
+    fetchProfessors();
+  }, []);
+
+  const addDepartment = async () => {
     if (!departmentName || !departmentDescription || !departmentBannerImage) {
       setError("All department fields are required!");
       return;
     }
-
-    const newDepartment = {
-      id: Date.now(),
-      name: departmentName,
-      description: departmentDescription,
-      bannerImage: departmentBannerImage,
-      professors: [],
-    };
-    setDepartments([...departments, newDepartment]);
-    setDepartmentName(""); 
-    setDepartmentDescription("");
-    setDepartmentBannerImage("");
-    setError("");
+    try {
+      const res = await API.post("/departments", {
+        name: departmentName,
+        description: departmentDescription,
+        bannerImage: departmentBannerImage,
+        contactInfo: "admin@school.edu",
+      });
+      setDepartments([...departments, res.data]);
+      setDepartmentName("");
+      setDepartmentDescription("");
+      setDepartmentBannerImage("");
+      setError("");
+    } catch (err) {
+      console.error("Failed to create department", err);
+    }
   };
 
-  // Add a new professor
-  const addProfessor = () => {
+  const removeDepartment = async (id) => {
+    try {
+      await API.delete(`/departments/${id}`);
+      setDepartments(departments.filter((d) => d.id !== id));
+    } catch (err) {
+      console.error("Delete department failed", err);
+    }
+  };
+
+  const addProfessor = async () => {
     if (
       !professorName ||
       !professorEmail ||
@@ -61,31 +101,33 @@ export default function AdminPanel() {
       return;
     }
 
-    const newProfessor = {
-      id: Date.now(),
-      name: professorName,
-      email: professorEmail,
-      bio: professorBio,
-      profileImage: professorProfileImage,
-      departmentId: professorDepartmentId,
-    };
-    setProfessors([...professors, newProfessor]);
-    setProfessorName(""); 
-    setProfessorEmail("");
-    setProfessorBio("");
-    setProfessorProfileImage("");
-    setProfessorDepartmentId("");
-    setProfessorError(""); 
+    try {
+      const res = await API.post("/professors", {
+        name: professorName,
+        email: professorEmail,
+        bio: professorBio,
+        profileImage: professorProfileImage,
+        departmentId: Number(professorDepartmentId),
+      });
+      setProfessors([...professors, res.data]);
+      setProfessorName("");
+      setProfessorEmail("");
+      setProfessorBio("");
+      setProfessorProfileImage("");
+      setProfessorDepartmentId("");
+      setProfessorError("");
+    } catch (err) {
+      console.error("Failed to create professor", err);
+    }
   };
 
-  // Remove department
-  const removeDepartment = (id) => {
-    setDepartments(departments.filter((dept) => dept.id !== id));
-  };
-
-  // Remove professor
-  const removeProfessor = (id) => {
-    setProfessors(professors.filter((prof) => prof.id !== id));
+  const removeProfessor = async (id) => {
+    try {
+      await API.delete(`/professors/${id}`);
+      setProfessors(professors.filter((p) => p.id !== id));
+    } catch (err) {
+      console.error("Delete professor failed", err);
+    }
   };
 
   return (
@@ -93,11 +135,12 @@ export default function AdminPanel() {
       <Typography variant="h4" gutterBottom>
         Admin Panel
       </Typography>
+
       {/* === Departments Section === */}
       <Box sx={{ mt: 5 }}>
         <Typography variant="h5">Departments</Typography>
         <Box sx={{ mt: 2, display: "flex", gap: 2, flexDirection: "row" }}>
-          {error && <Alert severity="error">{error}</Alert>} {/* Display error */}
+          {error && <Alert severity="error">{error}</Alert>}
           <TextField
             label="Name"
             fullWidth
@@ -119,14 +162,12 @@ export default function AdminPanel() {
           <Button
             variant="contained"
             onClick={addDepartment}
-            sx={{
-              padding: "0px 30px",
-              fontSize: "12px",
-            }}
+            sx={{ padding: "0px 30px", fontSize: "12px" }}
           >
             Add Department
           </Button>
         </Box>
+
         <Grid container spacing={2} sx={{ mt: 2 }}>
           {departments.map((dept) => (
             <Grid item key={dept.id} xs={12} md={6} lg={4}>
@@ -144,17 +185,9 @@ export default function AdminPanel() {
                   }}
                 />
                 <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    gap: 1,
-                    mt: 1,
-                  }}
+                  sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 1 }}
                 >
-                  <IconButton
-                    size="small"
-                    onClick={() => removeDepartment(dept.id)}
-                  >
+                  <IconButton size="small" onClick={() => removeDepartment(dept.id)}>
                     <DeleteIcon />
                   </IconButton>
                   <IconButton size="small">
@@ -166,13 +199,12 @@ export default function AdminPanel() {
           ))}
         </Grid>
       </Box>
+
       {/* === Professors Section === */}
       <Box sx={{ mt: 5 }}>
         <Typography variant="h5">Professors</Typography>
         <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-          {professorError && (
-            <Alert severity="error">{professorError}</Alert>
-          )} {/* Display professor error */}
+          {professorError && <Alert severity="error">{professorError}</Alert>}
           <TextField
             label="Name"
             fullWidth
@@ -206,14 +238,12 @@ export default function AdminPanel() {
           <Button
             variant="contained"
             onClick={addProfessor}
-            sx={{
-              padding: "10px 26px",
-              fontSize: "12px",
-            }}
+            sx={{ padding: "10px 26px", fontSize: "12px" }}
           >
             Add Professor
           </Button>
         </Box>
+
         <Grid container spacing={2} sx={{ mt: 2 }}>
           {professors.map((prof) => (
             <Grid item key={prof.id} xs={12} md={6} lg={4}>
@@ -234,10 +264,7 @@ export default function AdminPanel() {
                 <Box
                   sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 1 }}
                 >
-                  <IconButton
-                    size="small"
-                    onClick={() => removeProfessor(prof.id)}
-                  >
+                  <IconButton size="small" onClick={() => removeProfessor(prof.id)}>
                     <DeleteIcon />
                   </IconButton>
                   <IconButton size="small">
