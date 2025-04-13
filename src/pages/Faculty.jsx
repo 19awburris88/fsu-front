@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Grid,
   Card,
@@ -12,16 +13,30 @@ import {
   Avatar,
   Box,
 } from '@mui/material';
-import { generateFakeDepartments } from '../utils/fakeData';
-
-const departments = generateFakeDepartments();
+import API from '../api/axios';
 
 export default function Faculty() {
+  const [searchParams] = useSearchParams();
+  const departmentId = searchParams.get('department');
+  const [professors, setProfessors] = useState([]);
   const [selectedProfessor, setSelectedProfessor] = useState(null);
   const [open, setOpen] = useState(false);
 
-  const handleOpen = (professor) => {
-    setSelectedProfessor(professor);
+  useEffect(() => {
+    const fetchProfessors = async () => {
+      try {
+        const url = departmentId ? `/professors?departmentId=${departmentId}` : '/professors';
+        const res = await API.get(url);
+        setProfessors(res.data);
+      } catch (err) {
+        console.error('Failed to fetch professors:', err);
+      }
+    };
+    fetchProfessors();
+  }, [departmentId]);
+
+  const handleOpen = (prof) => {
+    setSelectedProfessor(prof);
     setOpen(true);
   };
 
@@ -30,19 +45,11 @@ export default function Faculty() {
     setSelectedProfessor(null);
   };
 
-  // Flatten all professors and attach departmentName
-  const professors = departments.flatMap((dept) =>
-    dept.professors.map((prof) => ({
-      ...prof,
-      departmentName: dept.name,
-    }))
-  );
-
   return (
     <>
       <Grid container spacing={3} justifyContent="center">
         {professors.map((prof) => (
-          <Grid item key={prof.id} xs={12} sm={6} md={4} lg={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={prof.id}>
             <Card
               sx={{
                 width: 250,
@@ -51,8 +58,8 @@ export default function Faculty() {
                 boxShadow: 4,
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                 '&:hover': {
-                  transform: 'translateY(-10px) scale(1.05)', // Lift and scale effect
-                  boxShadow: 8, 
+                  transform: 'translateY(-10px) scale(1.05)',
+                  boxShadow: 8,
                   cursor: 'pointer',
                 },
               }}
@@ -61,14 +68,14 @@ export default function Faculty() {
                 <CardContent sx={{ height: '100%' }}>
                   <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
                     <Avatar
-                      src={prof.image}
+                      src={prof.profileImage}
                       alt={prof.name}
                       sx={{
                         width: 100,
                         height: 100,
                         transition: 'transform 0.3s ease',
                         '&:hover': {
-                          transform: 'scale(1.1)', // Slight scale effect for avatar
+                          transform: 'scale(1.1)',
                         },
                       }}
                     />
@@ -76,7 +83,7 @@ export default function Faculty() {
                       {prof.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" align="center">
-                      {prof.departmentName}
+                      {prof.department ? prof.department.name : 'N/A'}
                     </Typography>
                   </Box>
                 </CardContent>
@@ -85,8 +92,7 @@ export default function Faculty() {
           </Grid>
         ))}
       </Grid>
-
-      {/* Modal */}
+  
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
         {selectedProfessor && (
           <>
@@ -94,20 +100,15 @@ export default function Faculty() {
             <DialogContent dividers>
               <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
                 <Avatar
-                  src={selectedProfessor.image}
+                  src={selectedProfessor.profileImage}
                   alt={selectedProfessor.name}
                   sx={{
                     width: 120,
                     height: 120,
-                    // border: '2px solid #1976d2', 
-                    // transition: 'transform 0.3s ease',
-                    // '&:hover': {
-                    //   transform: 'scale(1.15)', // Slight scale effect for avatar
-                    // },
                   }}
                 />
                 <Typography variant="subtitle1" fontWeight={500}>
-                  Department: {selectedProfessor.departmentName}
+                  Department: {selectedProfessor.department ? selectedProfessor.department.name : 'N/A'}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   Email: {selectedProfessor.email}

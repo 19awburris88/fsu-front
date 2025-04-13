@@ -9,7 +9,7 @@ import {
   Button,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import API from '../api/axios'; // Axios instance with auth headers
+import API from '../api/axios';
 
 export default function Departments() {
   const [departments, setDepartments] = useState([]);
@@ -34,7 +34,7 @@ export default function Departments() {
       </Typography>
       <Grid container spacing={4} justifyContent="center">
         {departments.map((dept) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={dept.id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dept.id}>
             <Card
               sx={{
                 height: 400,
@@ -53,7 +53,7 @@ export default function Departments() {
             >
               <CardMedia
                 component="img"
-                image={dept.bannerImage}
+                image={dept.bannerImage || 'https://picsum.photos/400/180'}
                 alt={dept.name}
                 sx={{
                   height: 165,
@@ -65,7 +65,9 @@ export default function Departments() {
                   },
                 }}
                 onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/400x180?text=Image+Unavailable';
+                  if (e.target.src !== 'https://picsum.photos/400/180') {
+                    e.target.src = 'https://picsum.photos/400/180';
+                  }
                 }}
               />
               <CardContent sx={{ flexGrow: 1 }}>

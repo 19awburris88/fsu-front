@@ -5,6 +5,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Departments from "./pages/Departments";
 import Faculty from "./pages/Faculty";
 import AdminPanel from "./pages/Admin";
+import { DepartmentDetail } from "./pages/DepartmentDetail";
 
 function App() {
   // Check admin login status from localStorage
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/departments" />} />
           <Route path="/departments" element={<Departments />} />
+          <Route path="/departments/:id" element={<DepartmentDetail />} />
           <Route path="/faculty" element={<Faculty />} />
           <Route
             path="/admin"
