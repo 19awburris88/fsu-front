@@ -31,7 +31,7 @@ export function DepartmentDetail() {
       <Typography variant="h4">Faculty</Typography>
       <Grid container spacing={2}>
         {department.professors.map((prof) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dept.id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={prof.id}>
             <Card>
               <CardContent>
                 <Avatar src={prof.profileImage} alt={prof.name} />

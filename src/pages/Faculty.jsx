@@ -49,7 +49,7 @@ export default function Faculty() {
     <>
       <Grid container spacing={3} justifyContent="center">
         {professors.map((prof) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dept.id}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={prof.id}>
             <Card
               sx={{
                 width: 250,
