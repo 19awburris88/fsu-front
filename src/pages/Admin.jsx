@@ -170,7 +170,7 @@ export default function AdminPanel() {
 
         <Grid container spacing={2} sx={{ mt: 2 }}>
           {departments.map((dept) => (
-            <Grid item key={dept.id} xs={12} md={6} lg={4}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dept.id}>
               <Paper sx={{ p: 2 }}>
                 <Typography variant="h6">{dept.name}</Typography>
                 <Typography variant="body2">{dept.description}</Typography>
@@ -246,7 +246,7 @@ export default function AdminPanel() {
 
         <Grid container spacing={2} sx={{ mt: 2 }}>
           {professors.map((prof) => (
-            <Grid item key={prof.id} xs={12} md={6} lg={4}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dept.id}>
               <Paper sx={{ p: 2 }}>
                 <Typography variant="h6">{prof.name}</Typography>
                 <Typography variant="body2">{prof.email}</Typography>
